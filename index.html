@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yisus Store</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <h1>Yisus Store</h1>
+        </div>
+        <nav class="navbar">
+            <ul>
+                <li><a href="#">Inicio</a></li>
+                <li><a href="#">Productos</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <div class="container" id="productos">
+        </div>
+    </main>
+
+    <script>
+        const url = 'https://fakestoreapi.com/products';
+        const IVA = 0.19;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const productosFiltrados = data.filter(producto => producto.price >= 15);
+
+                const container = document.getElementById('productos');
+                productosFiltrados.forEach(producto => {
+                    const precioIVA = (producto.price * (1 + IVA)).toFixed(2);
+                    const product = document.createElement('div');
+                    product.className = 'product-card';
+                    product.innerHTML = `
+                        <div class="product-image">
+                            <img src="${producto.image}" alt="${producto.title}">
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">${producto.title}</div>
+                            <div class="product-description">${producto.description}</div>
+                            <div class="product-price">Precio: $${producto.price}</div>
+                            <div class="product-price-iva">Precio con IVA: $${precioIVA}</div>
+                        </div>
+                    `;
+                    container.appendChild(product);
+                });
+            })
+            .catch(error => {
+                console.error('Error al consumir la API:', error);
+            });
+    </script>
+</body>
+</html>
